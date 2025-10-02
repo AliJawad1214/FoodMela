@@ -1,0 +1,71 @@
+﻿@model FoodMela.Models.Order
+
+@{
+    ViewData["Title"] = "Order Confirmation";
+    decimal total = 0;
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h2 class="text-success">🎉 Thank you for your order!</h2>
+        <p class="lead">Your order has been placed successfully. A vendor will process it soon.</p>
+    </div>
+
+    <!-- Order Info -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            Order Information
+        </div>
+        <div>
+            <td>@Model.Status</td>
+        </div>
+        <div class="card-body">
+            <p><strong>Order ID:</strong> @Model.Id</p>
+            <p><strong>Order Date:</strong> @Model.OrderDate.ToString("f")</p>
+            <p><strong>Customer:</strong> @Model.CustomerName</p>
+            <p><strong>Address:</strong> @Model.CustomerAddress</p>
+            <p><strong>Phone:</strong> @Model.CustomerPhone</p>
+        </div>
+    </div>
+
+    <!-- Ordered Items -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+            Ordered Items
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderItems)
+                    {
+                        var subtotal = item.UnitPrice * item.Quantity;
+                        total += (decimal)subtotal;
+
+                        <tr>
+                            <td>@(item.Product?.Name ?? "Product")</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.UnitPrice.ToString("C")</td>
+                            <td>@subtotal.ToString("C")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <h4 class="text-end">Total: @total.ToString("C")</h4>
+        </div>
+    </div>
+
+    <!-- Back to Home -->
+    <div class="text-center mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-lg btn-primary">
+            ⬅ Back to Home
+        </a>
+    </div>
+</div>

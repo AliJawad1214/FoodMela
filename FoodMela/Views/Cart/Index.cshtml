@@ -1,0 +1,114 @@
+﻿@model FoodMela.Models.Cart
+
+@{
+    ViewData["Title"] = "My Cart";
+    decimal total = 0;
+
+    // Check if customer already has active order (Pending or InProcess)
+    var hasActiveOrder = ViewBag.HasActiveOrder != null && (bool)ViewBag.HasActiveOrder;
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">🛒 My Shopping Cart</h2>
+
+    <!-- TempData Messages -->
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    @if (Model == null || !Model.CartItems.Any())
+    {
+        <div class="alert alert-info">
+            Your cart is empty. <a href="@Url.Action("Index", "Home")">Continue shopping</a>.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model.CartItems)
+            {
+                var product = item.Product;
+                total += (decimal)(product.Price * item.Quantity);
+
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm bg-light h-100 cart-card" style="transition: transform 0.2s;">
+                        <img src="@product.ImagePath" class="card-img-top" alt="@product.Name" style="height:200px; object-fit:cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p>
+                                Vendor:
+                                <a asp-controller="Home"
+                                   asp-action="ByVendor"
+                                   asp-route-vendorId="@item.Product.VendorId">
+                                    @item.Product.Vendor?.FullName
+                                </a>
+                            </p>
+
+                            <p class="card-text text-muted">@product.Description</p>
+                            <p><strong>Price:</strong> $@product.Price</p>
+
+                            <p>
+                                <strong>Quantity:</strong>
+                                <div class="btn-group" role="group">
+                                    <!-- Decrease -->
+                                    <form asp-action="Remove" asp-route-id="@item.Id" method="post" style="display:inline">
+                                        <button type="submit" class="btn btn-warning btn-sm">-</button>
+                                    </form>
+
+                                    <span class="px-2 align-self-center">@item.Quantity</span>
+
+                                    <!-- Increase -->
+                                    <form asp-action="AddToCart" asp-route-productId="@product.Id" method="post" style="display:inline">
+                                        <button type="submit" class="btn btn-success btn-sm">+</button>
+                                    </form>
+                                </div>
+                            </p>
+
+                            <p><strong>Subtotal:</strong> $@(product.Price* item.Quantity)</p>
+                        </div>
+                        <div class="card-footer bg-white text-end">
+                            <!-- Remove All -->
+                            <form asp-action="RemoveAll" asp-route-id="@item.Id" method="post" style="display:inline">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="mt-4 p-3 bg-white shadow rounded">
+            <h4>Total: $@total</h4>
+
+            @if (hasActiveOrder)
+            {
+                <button class="btn btn-secondary btn-lg" disabled>
+                    Order in Progress
+                </button>
+                <p class="text-danger mt-2">⚠ You already have an order in progress. Please wait until it is delivered before placing another.</p>
+            }
+            else
+            {
+                <a asp-controller="Order" asp-action="Checkout" class="btn btn-success btn-lg">
+                    Proceed to Checkout
+                </a>
+            }
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .cart-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.2);
+        }
+    </style>
+}

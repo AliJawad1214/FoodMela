@@ -1,0 +1,59 @@
+﻿@model FoodMela.Models.Order
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="container mt-4">
+    <h2>📦 Order Details</h2>
+    <hr />
+
+    <div class="mb-3">
+        <strong>Order ID:</strong> @Model.Id <br />
+        <strong>Placed On:</strong> @Model.OrderDate.ToLocalTime().ToString("f") <br />
+        <strong>Total Amount:</strong> $@Model.TotalAmount
+    </div>
+
+    <!-- 🚀 Progress Bar -->
+    <h4>Order Status</h4>
+    <div class="progress mb-4" style="height: 30px;">
+        <div class="progress-bar
+            @(Model.Status == OrderStatus.Pending ? "bg-warning" :
+                           Model.Status == OrderStatus.Accepted ? "bg-info" :
+                           Model.Status == OrderStatus.InProcess ? "bg-primary" :
+                           Model.Status == OrderStatus.Delivered ? "bg-success" : "bg-secondary")"
+             role="progressbar"
+             style="width:@(
+                             Model.Status == OrderStatus.Pending ? "25%" :
+                             Model.Status == OrderStatus.Accepted ? "50%" :
+                             Model.Status == OrderStatus.InProcess ? "75%" :
+                             "100%")">
+            @Model.Status
+        </div>
+    </div>
+
+    <!-- 🛒 Items -->
+    <h4>Items</h4>
+    <table class="table table-bordered table-striped">
+        <thead class="table-light">
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderItems)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>$@item.UnitPrice</td>
+                    <td>$@(item.Quantity* item.UnitPrice)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary mt-3">Back to Home</a>
+</div>

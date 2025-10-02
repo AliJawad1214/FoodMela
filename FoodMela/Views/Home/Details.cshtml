@@ -1,0 +1,31 @@
+﻿@model FoodMela.Models.Product
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<div class="card shadow-lg mb-4">
+    @if (!string.IsNullOrEmpty(Model.ImagePath))
+    {
+        <img src="@Model.ImagePath" class="card-img-top" alt="@Model.Name" style="height:350px;object-fit:cover;" />
+    }
+    <div class="card-body">
+        <h3 class="card-title">@Model.Name</h3>
+        <p>
+            Vendor:
+            <a asp-controller="Home"
+               asp-action="ByVendor"
+               asp-route-vendorId="@Model.VendorId">
+                @Model.Vendor?.FullName
+            </a>
+        </p>
+        <p class="card-text text-muted">@Model.Description</p>
+        <p class="fw-bold fs-5">Price: @Model.Price.ToString("C")</p>
+        <a asp-action="Index" class="btn btn-secondary mt-2">Back to Products</a>
+        <!-- Add to Cart -->
+        <form asp-controller="Cart" asp-action="AddToCart" method="post" class="d-inline">
+            <input type="hidden" name="productId" value="@Model.Id" />
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-success">Add to Cart</button>
+        </form>
+    </div>
+</div>

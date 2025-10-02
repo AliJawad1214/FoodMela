@@ -1,0 +1,43 @@
+﻿@model FoodMela.Models.VendorProfile
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h2 class="mb-4">My Profile</h2>
+
+@if (Model == null)
+{
+    <div class="alert alert-info">
+        You haven’t created your vendor profile yet.
+        <a asp-action="Profile" class="btn btn-primary btn-sm ms-2">Create Profile</a>
+    </div>
+}
+else
+{
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 text-center">
+                    @if (!string.IsNullOrEmpty(Model.LogoPath))
+                    {
+                        <img src="@Model.LogoPath" alt="Shop Logo" class="img-fluid rounded mb-3" />
+                    }
+                    else
+                    {
+                        <div class="border p-4 text-muted">No Logo</div>
+                    }
+                </div>
+                <div class="col-md-9">
+                    <h4 class="card-title">@Model.ShopName</h4>
+                    <p class="card-text">
+                        <strong>Address:</strong> @Model.ShopAddress <br />
+                        <strong>Contact:</strong> @Model.ContactNumber <br />
+                        <strong>Description:</strong> @Model.Description
+                    </p>
+                    <a asp-action="Profile" class="btn btn-warning">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

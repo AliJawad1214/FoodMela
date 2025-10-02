@@ -1,0 +1,19 @@
+﻿@model FoodMela.Models.CustomerProfile
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h2>My Profile</h2>
+
+<div class="card shadow-sm bg-light mb-3" style="max-width: 600px;">
+    <div class="card-body">
+        <h4 class="card-title">@Model.FullName</h4>
+        <p class="card-text"><strong>Address:</strong> @Model.Address</p>
+        <p class="card-text"><strong>City:</strong> @Model.City</p>
+        <p class="card-text"><strong>Phone:</strong> @Model.PhoneNumber</p>
+    </div>
+    <div class="card-footer text-end">
+        <a asp-action="Profile" class="btn btn-warning">Edit Profile</a>
+    </div>
+</div>

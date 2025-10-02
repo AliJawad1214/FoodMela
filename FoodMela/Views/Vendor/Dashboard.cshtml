@@ -1,0 +1,72 @@
+﻿@model FoodMela.Models.ViewModels.VendorDashboardViewModel
+
+<div class="container mt-4">
+    <h2>📊 Vendor Dashboard</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white p-3 shadow">
+                <h5>Total Orders</h5>
+                <h3>@Model.TotalOrders</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white p-3 shadow">
+                <h5>Total Revenue</h5>
+                <h3>$@Model.TotalRevenue</h3>
+            </div>
+        </div>
+    </div>
+
+    <h4>Orders by Status</h4>
+    <ul>
+        @foreach (var status in Model.OrdersByStatus)
+        {
+            <li>@status.Key: @status.Value</li>
+        }
+    </ul>
+
+    <h4 class="mt-4">Top Products</h4>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Product</th>
+                <th>Quantity Sold</th>
+                <th>Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.TopProducts)
+            {
+                <tr>
+                    <td>@p.ProductName</td>
+                    <td>@p.QuantitySold</td>
+                    <td>$@p.Revenue</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4 class="mt-4">Sales Over Time</h4>
+    <canvas id="salesChart"></canvas>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.SalesOverTime.Select(s => s.Date.ToString("yyyy-MM-dd")))),
+                datasets: [{
+                    label: 'Revenue',
+                    data: @Html.Raw(Json.Serialize(Model.SalesOverTime.Select(s => s.Revenue))),
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0,0,255,0.1)',
+                    fill: true
+                }]
+            }
+        });
+    </script>
+}

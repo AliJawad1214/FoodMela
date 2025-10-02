@@ -1,0 +1,91 @@
+﻿@model IEnumerable<FoodMela.Models.Product>
+
+<h2>Products by @ViewBag.VendorName</h2>
+
+@* <div class="row">
+    @foreach (var product in Model)
+    {
+        <div class="col-md-3">
+            <img src="@product.ImagePath" class="card-img-top" alt="@product.Name" style="height:200px; object-fit:cover;">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5>@product.Name</h5>
+                    <p>Price: @product.Price</p>
+                </div>
+            </div>
+        </div>
+    }
+</div> *@
+
+<div class="row">
+    @if (!Model.Any())
+    {
+        <div class="col-12 text-center">
+            <p class="text-muted">No products available yet.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (var product in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100 bg-light product-card">
+                    @if (!string.IsNullOrEmpty(product.ImagePath))
+                    {
+                        <img src="@product.ImagePath" class="card-img-top" alt="@product.Name" style="height:200px;object-fit:cover;" />
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p>
+                            Vendor:
+                            <a asp-controller="Home"
+                               asp-action="ByVendor"
+                               asp-route-vendorId="@product.VendorId">
+                                @product.Vendor?.FullName
+                            </a>
+                        </p>
+
+                        <p class="card-text text-muted">@product.Description</p>
+                        <p class="fw-bold">@product.Price.ToString("C")</p>
+
+                        <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-outline-primary">View Details</a>
+
+                        <!-- Add to Cart / Role Handling -->
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            if (User.IsInRole("Customer"))
+                            {
+                                <form asp-controller="Cart" asp-action="AddToCart" method="post" class="d-inline">
+                                    <input type="hidden" name="productId" value="@product.Id" />
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-success btn-sm">Add to Cart</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary btn-sm" disabled>Customers Only</button>
+                            }
+                        }
+                        else
+                        {
+                            <a class="btn btn-outline-danger" asp-area="Identity" asp-page="/Account/Login">Login to Buy</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@section Styles {
+    <style>
+        .product-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            .product-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            }
+    </style>
+}

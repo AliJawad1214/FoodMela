@@ -1,0 +1,70 @@
+﻿@model FoodMela.Models.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Checkout";
+    decimal total = 0;
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">🧾 Checkout</h2>
+
+    <div class="row">
+        <!-- Customer Info -->
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    Customer Information
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> @Model.CustomerName</p>
+                    <p><strong>Address:</strong> @Model.CustomerAddress</p>
+                    <p><strong>Phone:</strong> @Model.CustomerPhone</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    Order Summary
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.CartItems)
+                            {
+                                var subtotal = item.Product.Price * item.Quantity;
+                                total += (decimal)subtotal;
+
+                                <tr>
+                                    <td>@item.Product.Name</td>
+                                    <td>@item.Quantity</td>
+                                    <td>@item.Product.Price.ToString("C")</td>
+                                    <td>@subtotal.ToString("C")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <h4 class="text-end">Total: @total.ToString("C")</h4>
+                </div>
+            </div>
+
+            <!-- Place Order -->
+            <form asp-action="PlaceOrder" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-lg btn-success float-end">
+                    ✅ Place Order
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+﻿@model FoodMela.Models.ViewModels.AdminDashboardViewModel
+
+<div class="container mt-4">
+    <h2>📊 Admin Dashboard</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white p-3 shadow">
+                <h5>Total Users</h5>
+                <h3>@Model.TotalUsers</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark p-3 shadow">
+                <h5>Vendors</h5>
+                <h3>@Model.TotalVendors</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white p-3 shadow">
+                <h5>Customers</h5>
+                <h3>@Model.TotalCustomers</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white p-3 shadow">
+                <h5>Total Revenue</h5>
+                <h3>$@Model.TotalRevenue</h3>
+            </div>
+        </div>
+    </div>
+
+    <h4>Orders by Status</h4>
+    <ul>
+        @foreach (var status in Model.OrdersByStatus)
+        {
+            <li>@status.Key: @status.Value</li>
+        }
+    </ul>
+
+    <h4 class="mt-4">Top Vendors</h4>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Vendor</th>
+                <th>Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var v in Model.TopVendors)
+            {
+                <tr>
+                    <td>@v.VendorName</td>
+                    <td>$@v.Revenue</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4 class="mt-4">Top Products</h4>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Product</th>
+                <th>Quantity Sold</th>
+                <th>Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.TopProducts)
+            {
+                <tr>
+                    <td>@p.ProductName</td>
+                    <td>@p.QuantitySold</td>
+                    <td>$@p.Revenue</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4 class="mt-4">Sales Over Time</h4>
+    <canvas id="salesChart"></canvas>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.SalesOverTime.Select(s => s.Date.ToString("yyyy-MM-dd")))),
+                datasets: [{
+                    label: 'Revenue',
+                    data: @Html.Raw(Json.Serialize(Model.SalesOverTime.Select(s => s.Revenue))),
+                    borderColor: 'green',
+                    backgroundColor: 'rgba(0,128,0,0.1)',
+                    fill: true
+                }]
+            }
+        });
+    </script>
+}

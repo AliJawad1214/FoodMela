@@ -1,0 +1,54 @@
+﻿@model FoodMela.Models.VendorProfile
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<h2 class="mb-4">Edit Profile</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form asp-action="Profile" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="ShopName" class="form-label"></label>
+                    <input asp-for="ShopName" class="form-control" />
+                    <span asp-validation-for="ShopName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="ContactNumber" class="form-label"></label>
+                    <input asp-for="ContactNumber" class="form-control" />
+                    <span asp-validation-for="ContactNumber" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ShopAddress" class="form-label"></label>
+                <input asp-for="ShopAddress" class="form-control" />
+                <span asp-validation-for="ShopAddress" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="LogoPath" class="form-label"></label>
+                <input asp-for="LogoPath" class="form-control" />
+                <span asp-validation-for="LogoPath" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-success">Save Changes</button>
+            <a asp-action="Details" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

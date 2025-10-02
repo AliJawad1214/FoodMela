@@ -1,0 +1,42 @@
+﻿@model IEnumerable<FoodMela.Models.Order>
+
+<h2>Vendor Orders</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.CustomerName</td>
+                <td>@order.TotalAmount</td>
+                <td>@order.Status</td>
+                <td>
+                    @if (order.Status == FoodMela.Models.OrderStatus.Pending)
+                    {
+                        <form asp-action="Accept" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="@order.Id" />
+                            <button type="submit" class="btn btn-sm btn-success">Accept</button>
+                        </form>
+                    }
+                    else if (order.Status == FoodMela.Models.OrderStatus.InProcess)
+                    {
+                        <form asp-action="Deliver" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="@order.Id" />
+                            <button type="submit" class="btn btn-sm btn-primary">Deliver</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,61 @@
+﻿@model IEnumerable<FoodMela.Models.Product>
+
+@{
+    ViewData["Title"] = "Manage Products";
+}
+
+<h2 class="mb-4">Manage Products</h2>
+
+<table class="table table-bordered table-hover shadow-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Vendor</th>
+            <th>Image</th>
+            <th>Status</th>
+            <th style="width: 180px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Price.ToString("C")</td>
+                <td>@product.Description</td>
+                <td>@product.Vendor?.FullName</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(product.ImagePath))
+                    {
+                        <img src="@product.ImagePath" alt="@product.Name"
+                             style="width:60px;height:60px;object-fit:cover;" />
+                    }
+            </td>
+            <td>
+                <span class="badge
+                        @(product.Status == FoodMela.Models.ProductStatus.Pending ? "bg-warning text-dark" :
+                                                product.Status == FoodMela.Models.ProductStatus.Approved ? "bg-success" : "bg-danger")">
+                    @product.Status
+                </span>
+            </td>
+            <td>
+                @if (product.Status == FoodMela.Models.ProductStatus.Pending)
+                    {
+                        <form asp-action="Approve" asp-route-id="@product.Id" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                        </form>
+                        <form asp-action="Reject" asp-route-id="@product.Id" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No action</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
