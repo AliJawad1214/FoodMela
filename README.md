@@ -72,10 +72,8 @@ Open in browser: **https://localhost:5001**
 
 ---
 
-## 📸 Screenshots (Add Later)  
-- Vendor Dashboard  
-- Customer Cart & Order Tracking  
-- Notification Bell + Dropdown  
+## Test It 
+http://foodmela.runasp.net/
 
 ---
 
